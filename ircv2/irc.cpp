@@ -1,36 +1,43 @@
 #include "Server.hpp"
 
-// void Server::create_channel(const std::string &channel_name,const std::string& user_name, int fd)
-// {
-//     std::map<std::string, std::vector<std::string> >::iterator it;
-//     if(channel.find(channel_name) == channel.end())
-//     { 
-//         channel[channel_name].push_back(user_name);
-//     }
-//     else
-//     {
-//         channel[channel_name].push_back(user_name);
-//         std::cout << "channel already exist" << std::endl;
-//         // return false;
-//     }
-// }
-
-void Server::create_channel(const std::string &channel_name, const std::string& user_name, int fd)
+void Server::create_channel(const std::string &channel_name,const std::string& user_name, int fd)
 {
-    std::map<std::string, std::vector<std::string> >::iterator it = channel.find(channel_name);
-    if (it == channel.end())
+    std::map<std::string, std::vector<std::string> >::iterator it;
+    if(channel.find(channel_name) == channel.end())
     { 
-        std::vector<std::string> users;
-        users.push_back("@" + user_name); // Admin user
-        channel[channel_name] = users;
+        channel[channel_name].push_back(user_name);
+        // std::string creationTimeMessage = constructCreationTimeMessage(channel_name);
+        // std::string joinMessage = ":" + user_name + " JOIN " + channel_name + "\n";
+        // std::string modeMessage = ":irc.ChatWladMina MODE " + channel_name + " +nt\n";
+        // std::string namesMessage = ":irc.ChatWladMinah 353 " + user_name +  " = " + channel_name + " :@" + user_name + "\n";
+        // std::string endOfNamesMessage = ":irc.ChatWladMina 366 " + user_name + " " + channel_name + " :End of /NAMES list.\n";
+        // std::string channelMessage = ":irc.ChatWladMina 354 " + channel_name + "\n";
+        
+        // send(fd, joinMessage.c_str(), joinMessage.length(), 0);
+        // send(fd, modeMessage.c_str(), modeMessage.length(), 0);
+        // send(fd, namesMessage.c_str(), namesMessage.length(), 0);
+        // send(fd, endOfNamesMessage.c_str(), endOfNamesMessage.length(), 0);
+        // send(fd, channelMessage.c_str(), channelMessage.length(), 0);
     }
     else
     {
         channel[channel_name].push_back(user_name);
-        std::cout << "channel already exists" << std::endl;
+        std::cout << "channel already exist" << std::endl;
+        // std::string creationTimeMessage = constructCreationTimeMessage(channel_name);
+        // std::string joinMessage = ":" + user_name + " JOIN " + channel_name + "\r\n";
+        // std::string modeMessage = ":irc.ChatWladMina MODE " + channel_name + " +nt\r\n";
+        // std::string namesMessage = ":irc.ChatWladMinah 353 " + user_name +  " = " + channel_name + " :" + user_name + "\r\n";
+        // std::string endOfNamesMessage = ":irc.ChatWladMina 366 " + user_name + " " + channel_name + " :End of /NAMES list.\r\n";
+        // std::string channelMessage = ":irc.ChatWladMina 354 " + channel_name + "\r\n";
+        
+        // send(fd, joinMessage.c_str(), joinMessage.length(), 0);
+        // send(fd, modeMessage.c_str(), modeMessage.length(), 0);
+        // send(fd, namesMessage.c_str(), namesMessage.length(), 0);
+        // send(fd, endOfNamesMessage.c_str(), endOfNamesMessage.length(), 0);
+        // send(fd, channelMessage.c_str(), channelMessage.length(), 0);
+        // return false;
     }
 }
-            
 
 void Server::set_fd_users(const std::string &user_name,int fd)
 {
@@ -67,28 +74,12 @@ int Server::get_fd_users(std::string &users_in_channel)
     int fd;
     std::vector<int>::iterator it1;
     std::map<std::string, std::vector<int> >::iterator it;
-    if (users_in_channel[0] == '@')
+    it = users_fd.find(users_in_channel);
+    std::cout << "------>>>>>>" << users_in_channel << std::endl;
+    for(it1 = it->second.begin(); it1 != it->second.end(); it1++)
     {
-        it = users_fd.find(&users_in_channel[1]);
-        for(it1 = it->second.begin(); it1 != it->second.end(); it1++)
-        {
-            fd = *it1;
-        }
+        fd = *it1;
     }
-    else
-    {
-        it = users_fd.find(users_in_channel);
-        for(it1 = it->second.begin(); it1 != it->second.end(); it1++)
-        {
-            fd = *it1;
-        }
-    }
-    // it = users_fd.find(&users_in_channel[1]);
-    // std::cout << "------>>>>>>" << users_in_channel << std::endl;
-    // for(it1 = it->second.begin(); it1 != it->second.end(); it1++)
-    // {
-    //     fd = *it1;
-    // }
     return fd;
 }
 
